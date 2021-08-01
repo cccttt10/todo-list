@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "lib": [
+        "dom",
+        "dom.iterable",
+        "esnext"
+      ],
+      "module": "esnext",
+      "noEmit": false,
+      "noImplicitAny": false,
+      "strict": false,
+      "target": "es5",
+    }
+}

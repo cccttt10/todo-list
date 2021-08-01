@@ -1,0 +1,23 @@
+{
+    "name": "todo-list",
+    "version": "1.0.0",
+    "description": "[前端创意中心](https://github.com/chuntonggao/creativity-center)试听课的 Todo List Project 代码",
+    "main": "script.js",
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^4.3.5"
+    },
+    "scripts": {
+        "build": "npx tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chuntonggao/todo-list.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/chuntonggao/todo-list/issues"
+    },
+    "homepage": "https://github.com/chuntonggao/todo-list#readme"
+}

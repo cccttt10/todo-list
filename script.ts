@@ -1,8 +1,21 @@
 // Keycode for the ENTER and ESC keys.
-var ENTER_KEY = 13;
-var ESC_KEY = 27;
+const ENTER_KEY = 13;
+const ESC_KEY = 27;
+
 // Initial todo items in a stringified format.
-var stringifiedTodoItems = "\n    [\n        {\n            \"name\": \"This item is done\",\n            \"done\": true\n        },\n        {\n            \"name\": \"This item is not done\",\n            \"done\": false\n        }\n    ]\n";
+const stringifiedTodoItems = `
+    [
+        {
+            "name": "This item is done",
+            "done": true
+        },
+        {
+            "name": "This item is not done",
+            "done": false
+        }
+    ]
+`;
+
 /**
 * Model describes how todo items are stored and
 * specifies the methods that are used to modify the todo list.
@@ -12,17 +25,18 @@ var stringifiedTodoItems = "\n    [\n        {\n            \"name\": \"This ite
 *
 * Instead, the DOM should be updated in controller and view.
 */
-var model = {
+const model = {
     items: JSON.parse(stringifiedTodoItems),
+
     /**
     * Count the total number of items
     * and the number of done items.
     * @return {Object} { numItems: ..., numDoneItems: ... }
     */
-    countItems: function () {
-        var numItems = this.items.length;
-        var numDoneItems = 0;
-        this.items.forEach(function (item) {
+    countItems: function() {
+        const numItems = this.items.length;
+        let numDoneItems = 0;
+        this.items.forEach(function(item) {
             if (item.done === true) {
                 numDoneItems++;
             }
@@ -32,13 +46,14 @@ var model = {
             numDoneItems: numDoneItems,
         };
     },
+
     /**
     * Create a todo item, set it as undone and add it to the "items" array.
     * Items should have the following format:
     * { name: ..., done: true/false }
     * @param {string} name - the name of the new item
     */
-    createItem: function (name) {
+    createItem: function(name) {
         if (typeof name === 'string' && name.length > 0) {
             this.items.push({
                 name: name,
@@ -46,52 +61,58 @@ var model = {
             });
         }
     },
+
     /**
     * Change the name of the specified todo item.
     * @param {Number} index - the index of the item in the zero-indexed "items" array
     * @param {string} name - the item's new name
     */
-    changeItemName: function (index, name) {
+    changeItemName: function(index, name) {
         this.items[index].name = name;
     },
+
     /**
     * Delete the specified item.
     * @param {Number} index - the index of the item in the zero-indexed "items" array
     */
-    deleteItem: function (index) {
+    deleteItem: function(index) {
         this.items.splice(index, 1);
     },
+
     /**
     * Delete all items.
     */
-    deleteAllItems: function () {
+    deleteAllItems: function() {
         this.items = [];
     },
+
     /**
     * Toggle the status of the specified item.
     * If it is done, change it to undone.
     * If it is undone, change it to done.
     * @param {Number} index - the index of the item in the zero-indexed "items" array
     */
-    toggleItem: function (index) {
-        var item = this.items[index];
+    toggleItem: function(index) {
+        const item = this.items[index];
         item.done = !item.done;
     },
+
     /**
     * Toggle the status of all items.
     * If an item is done, change it to undone.
     * If an item is undone, change it to done.
     */
-    toggleAllItems: function () {
-        var count = this.countItems();
-        var numItems = count.numItems;
-        var numDoneItems = count.numDoneItems;
-        var markItemAsDone = function (item) { return (item.done = true); };
-        var markItemAsUndone = function (item) { return (item.done = false); };
-        var allItemsDone = numItems === numDoneItems;
+    toggleAllItems: function() {
+        const count = this.countItems();
+        const numItems = count.numItems;
+        const numDoneItems = count.numDoneItems;
+        const markItemAsDone = item => (item.done = true);
+        const markItemAsUndone = item => (item.done = false);
+        const allItemsDone = numItems === numDoneItems;
         this.items.forEach(allItemsDone ? markItemAsUndone : markItemAsDone);
     },
 };
+
 /**
 * Controller servers as a bridge between model and view.
 *
@@ -105,17 +126,18 @@ var model = {
 * directly related to the todo list
 * should be included in view instead.
 */
-var controller = {
+const controller = {
     /**
     * Read the content from the input field
     * and create a new todo item.
     */
-    createItem: function () {
-        var createItemInput = document.getElementById('create-item-input');
+    createItem: function() {
+        const createItemInput = document.getElementById('create-item-input') as HTMLInputElement;
         model.createItem(createItemInput.value);
         createItemInput.value = '';
         view.displayTodoItems();
     },
+
     /**
     * 2 keyboard events should be monitored:
     * pressing the ENTER key and pressing the ESC key.
@@ -127,18 +149,22 @@ var controller = {
     * when the ESC key is pressed.
     * @param {Event} event - the event paramter that is available to event handlers
     */
-    updateItemNameOnKeyUp: function (event) {
-        var updateItemInput = event.target;
+    updateItemNameOnKeyUp: function(event) {
+        const updateItemInput = event.target;
+
         // Get the id attribute from updateItemInput's parent <li> element.
-        var id = updateItemInput.parentNode.getAttribute('id');
+        const id = updateItemInput.parentNode.getAttribute('id');
+
         // Get the input value that the user has entered.
-        var newName = updateItemInput.value;
+        const newName = updateItemInput.value;
+
         // If there is some text in the update input,
         // then change the name of the selected item
         // when the ENTER key is pressed.
         if (updateItemInput.value && event.keyCode === ENTER_KEY) {
             this.changeItemName(id, newName);
         }
+
         // When the ESC key is pressed,
         // reset the name of the selected item to the original value.
         if (event.keyCode === ESC_KEY) {
@@ -150,18 +176,22 @@ var controller = {
             view.displayTodoItems();
         }
     },
+
     /**
     * Update the name of the selected todo item
     * when the user clicks on anything
     * that lies outside the input box.
     * @param {Event} event - the event paramter that is available to event handlers
     */
-    updateItemNameOnFocusOut: function (event) {
-        var updateItemInput = event.target;
+    updateItemNameOnFocusOut: function(event) {
+        const updateItemInput = event.target;
+
         // Get the id attribute from updateItemInput's parent <li> element.
-        var id = updateItemInput.parentNode.getAttribute('id');
+        const id = updateItemInput.parentNode.getAttribute('id');
+
         // Get the input value that the user has entered.
-        var newName = updateItemInput.value;
+        const newName = updateItemInput.value;
+
         if (typeof newName === 'string' && newName.length > 0) {
             this.changeItemName(id, newName);
         }
@@ -169,45 +199,50 @@ var controller = {
             this.deleteItem(id);
         }
     },
+
     /**
     * Change the name of the specified item.
     * @param {Number} index - the index of the item (index starts from zero)
     * @param {string} name - the item's new name
     */
-    changeItemName: function (index, name) {
+    changeItemName: function(index, name) {
         model.changeItemName(index, name);
         view.displayTodoItems();
     },
+
     /**
     * Delete the specified item.
     * @param {Number} index - the index of the item (index starts from zero)
     */
-    deleteItem: function (index) {
+    deleteItem: function(index) {
         model.deleteItem(index);
         view.displayTodoItems();
     },
+
     /**
     * Delete all items.
     */
-    deleteAllItems: function () {
-        var confirmDelete = confirm('This will delete all messages!');
+    deleteAllItems: function() {
+        const confirmDelete = confirm('This will delete all messages!');
         if (confirmDelete === true) {
             model.deleteAllItems();
             view.displayTodoItems();
         }
     },
+
     /**
     * Turn on the updating mode.
     * Display the update input and hide the message label.
     * @param {Event} event - the event paramter that is available to event handlers
     */
-    turnOnUpdatingMode: function (event) {
-        var itemLabel = event.target;
-        var updateItemInput = itemLabel.parentNode.querySelector('.update-item-input');
+    turnOnUpdatingMode: function(event) {
+        const itemLabel = event.target;
+        const updateItemInput = itemLabel.parentNode.querySelector('.update-item-input');
         view.hideDOMElement(itemLabel);
         view.displayDOMElement(updateItemInput);
         updateItemInput.focus();
     },
+
     /**
     * Read the index of the selected item from the UI.
     * Toggle the status of the selected item.
@@ -215,32 +250,37 @@ var controller = {
     * If it is undone, change it to done.
     * @param {Event} event - the event paramter that is available to event handlers
     */
-    toggleItem: function (event) {
-        var toggleItemCheckbox = event.target;
+    toggleItem: function(event) {
+        const toggleItemCheckbox = event.target;
+
         // Get the id attribute from toggleItemCheckbox' parent <li> element.
-        var id = toggleItemCheckbox.parentNode.getAttribute('id');
+        const id = toggleItemCheckbox.parentNode.getAttribute('id');
+
         model.toggleItem(id);
         view.displayTodoItems();
     },
+
     /**
     * Toggle the status of all items.
     * If an item is done, change it to undone.
     * If an item is undone, change it to done.
     */
-    toggleAllItems: function () {
+    toggleAllItems: function() {
         model.toggleAllItems();
         view.displayTodoItems();
     },
+
     /**
     * Clear the input form that is used to add new items.
     */
-    clearForm: function () {
-        var createItemInput = document.getElementById('create-item-input');
-        createItemInput.value = createItemInput.getAttribute('placeholder');
-        var createItemForm = document.getElementById('create-item-form');
+    clearForm: function() {
+        const createItemInput = document.getElementById('create-item-input') as HTMLInputElement;
+        createItemInput.value = createItemInput.getAttribute('placeholder') as string;
+        const createItemForm = document.getElementById('create-item-form') as HTMLFormElement;
         createItemForm.reset();
     },
 };
+
 /**
 * View contains methods that are responsible for displaying only but
 * do not handle events (e.g. displayMessages).
@@ -248,14 +288,14 @@ var controller = {
 * modified the appearance of UI elements and/or
 * attach event listeners to them.
 */
-var view = {
+const view = {
     /**
     * Render all todo items on the webpage.
     * This method is long and complex.
     * I have broken down the method into several smaller steps.
     * See the comments below.
     */
-    displayTodoItems: function () {
+    displayTodoItems: function() {
         /**
         * If there is at least one item,
         * then display a button that is used to toggle the status of all items.
@@ -281,81 +321,95 @@ var view = {
         * Display a delete button on the right.
         * Remember to attach appropriate event listener(s) to the button.
         */
-        var todoListUl = document.querySelector('ul');
-        todoListUl.innerHTML = '';
-        model.items.forEach(function (item, index) {
-            var itemLi = document.createElement('li');
-            itemLi.id = index;
-            var toggleItemCheckbox = document.createElement('input');
-            toggleItemCheckbox.type = 'checkbox';
-            toggleItemCheckbox.classList.add('toggle-item-checkbox');
-            toggleItemCheckbox.addEventListener('change', controller.toggleItem);
-            if (item.done === true) {
+         const todoListUl = document.querySelector('ul');
+         todoListUl.innerHTML = '';
+
+         model.items.forEach(function(item, index) {
+             const itemLi = document.createElement('li');
+             itemLi.id = index;
+
+             const toggleItemCheckbox = document.createElement('input');
+             toggleItemCheckbox.type = 'checkbox';
+             toggleItemCheckbox.classList.add('toggle-item-checkbox');
+             toggleItemCheckbox.addEventListener('change', controller.toggleItem);
+             if (item.done === true) {
                 toggleItemCheckbox.checked = true;
-            }
-            else {
+             }
+             else {
                 toggleItemCheckbox.checked = false;
-            }
-            var updateItemInput = document.createElement('input');
-            updateItemInput.classList.add('update-item-input', 'hide');
-            updateItemInput.type = 'text';
-            updateItemInput.value = item.name;
-            updateItemInput.addEventListener('keyup', controller.updateItemNameOnKeyUp.bind(controller));
-            updateItemInput.addEventListener('focusout', controller.updateItemNameOnFocusOut.bind(controller));
-            var itemLabel = document.createElement('label');
-            itemLabel.addEventListener('click', controller.turnOnUpdatingMode);
-            itemLabel.textContent = item.name;
-            itemLabel.classList.add('item-label');
-            var deleteItemButton = document.createElement('button');
-            deleteItemButton.textContent = 'x';
-            deleteItemButton.className = 'x-button';
-            deleteItemButton.addEventListener('click', function (event) { return (controller.deleteItem(index)); });
-            if (item.done === true) {
+             }
+
+             const updateItemInput = document.createElement('input');
+             updateItemInput.classList.add('update-item-input', 'hide');
+             updateItemInput.type = 'text';
+             updateItemInput.value = item.name;
+             updateItemInput.addEventListener('keyup', controller.updateItemNameOnKeyUp.bind(controller));
+             updateItemInput.addEventListener('focusout', controller.updateItemNameOnFocusOut.bind(controller));
+
+             const itemLabel = document.createElement('label');
+             itemLabel.addEventListener('click', controller.turnOnUpdatingMode);
+             itemLabel.textContent = item.name;
+             itemLabel.classList.add('item-label');
+
+             const deleteItemButton = document.createElement('button');
+             deleteItemButton.textContent = 'x';
+             deleteItemButton.className = 'x-button';
+             deleteItemButton.addEventListener('click', (event) => (controller.deleteItem(index)));
+
+
+             if (item.done === true) {
                 itemLabel.classList.add('item-strikethrough');
-            }
-            else {
+             }
+             else {
                 itemLabel.classList.remove('item-strikethrough');
-            }
-            itemLi.appendChild(toggleItemCheckbox);
-            itemLi.appendChild(itemLabel);
-            itemLi.appendChild(updateItemInput);
-            itemLi.appendChild(deleteItemButton);
-            todoListUl.insertBefore(itemLi, todoListUl.childNodes[0]);
-        });
-        // Display the button to toggle all items
-        // if there is at least one item.
-        // Hide the button if there are no items.
-        var toggleAllItemsButton = document.querySelector('#toggle-all-items-button');
-        if (model.countItems().numItems > 0) {
-            view.displayDOMElement(toggleAllItemsButton);
-        }
-        else {
-            view.hideDOMElement(toggleAllItemsButton);
-        }
-        // Show a "+" button if the user is typing the new item's name.
-        // Hide the button if there is no input value.
-        var createItemButton = document.querySelector('#create-item-button');
-        var createInputElement = document.getElementById('create-item-input');
-        if (createInputElement.value) {
-            view.displayDOMElement(createItemButton);
-        }
-        else {
-            view.hideDOMElement(createItemButton);
-        }
+             }
+
+             itemLi.appendChild(toggleItemCheckbox);
+             itemLi.appendChild(itemLabel);
+             itemLi.appendChild(updateItemInput);
+             itemLi.appendChild(deleteItemButton);
+             todoListUl.insertBefore(itemLi, todoListUl.childNodes[0]);
+         });
+
+         // Display the button to toggle all items
+         // if there is at least one item.
+         // Hide the button if there are no items.
+         const toggleAllItemsButton = document.querySelector('#toggle-all-items-button');
+         if (model.countItems().numItems > 0) {
+             view.displayDOMElement(toggleAllItemsButton);
+         }
+         else {
+             view.hideDOMElement(toggleAllItemsButton);
+         }
+
+         // Show a "+" button if the user is typing the new item's name.
+         // Hide the button if there is no input value.
+         const createItemButton = document.querySelector('#create-item-button');
+         const createInputElement = document.getElementById('create-item-input') as HTMLInputElement;
+         if (createInputElement.value) {
+             view.displayDOMElement(createItemButton);
+         }
+         else {
+             view.hideDOMElement(createItemButton);
+         }
+
     },
+
     /**
     * Display a DOM element.
     * @param {HTMLElement} domElement - the DOM element that you want to display
     */
-    displayDOMElement: function (domElement) {
+    displayDOMElement: function(domElement) {
         domElement.classList.remove('hide');
     },
+
     /**
     * Hide a DOM element.
     * @param {HTMLElement} domElement - the DOM element that you want to hide
     */
-    hideDOMElement: function (domElement) {
+    hideDOMElement: function(domElement) {
         domElement.classList.add('hide');
     }
 };
+
 view.displayTodoItems();
