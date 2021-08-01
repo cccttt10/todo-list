@@ -1,0 +1,20 @@
+{
+    "recommendations": [
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "coenraads.bracket-pair-colorizer",
+        "naumovs.color-highlight",
+        "editorconfig.editorconfig",
+        "dbaeumer.vscode-eslint",
+        "vincaslt.highlight-matching-tag",
+        "ecmel.vscode-html-css",
+        "kisstkondoros.vscode-gutter-preview",
+        "zignd.html-css-class-completion",
+        "ritwickdey.liveserver",
+        "pkief.material-icon-theme",
+        "eg2.vscode-npm-script",
+        "christian-kohler.path-intellisense",
+        "esbenp.prettier-vscode",
+        "remimarsal.prettier-now"
+    ]
+}
