@@ -81,7 +81,7 @@ const model = {
 * Controller servers as a bridge between model and view.
 *
 * In every controller method, remember to update the UI
-* by calling view.displayMessages().
+* by calling view.displayTodoItems().
 *
 * Difference between controller and view:
 * Only event handling methods should be included in controller
@@ -138,7 +138,7 @@ const controller = {
 
     /**
     * Turn on the updating mode.
-    * Display the update input and hide the message label.
+    * Display the update input and hide the todo item label.
     * @param {Event} event - the event paramter that is available to event handlers
     */
     turnOnUpdatingMode: function(event) {},
@@ -167,7 +167,7 @@ const controller = {
 
 /**
 * View contains methods that are responsible for displaying only but
-* do not handle events (e.g. displayMessages).
+* do not handle events (e.g. displayTodoItems).
 * View also contains DOM manipulation methods where we can
 * modified the appearance of UI elements and/or
 * attach event listeners to them.
